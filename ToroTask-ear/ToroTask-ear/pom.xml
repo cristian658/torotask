@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <artifactId>ToroTask-EAR</artifactId>
+        <groupId>com.gotoque.torotask</groupId>
+        <version>1.0-SNAPSHOT</version>
+    </parent>
+
+    <groupId>com.gotoque.torotask</groupId>
+    <artifactId>ToroTask-ear</artifactId>
+    <version>1.0-SNAPSHOT</version>
+    <packaging>ear</packaging>
+
+    <name>ToroTask-ear</name>
+    <url>http://maven.apache.org</url>
+    
+    <dependencies>
+        <dependency>
+            <groupId>com.gotoque.torotask.vo</groupId>
+            <artifactId>ToroTask-vo</artifactId>
+            <version>1.0-SNAPSHOT</version>
+            <type>jar</type>
+        </dependency>
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>ToroTask-ejb</artifactId>
+            <version>${project.version}</version>
+            <type>ejb</type>
+        </dependency>
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>ToroTask-dao</artifactId>
+            <version>${project.version}</version>
+            <type>jar</type>
+        </dependency>
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>ToroTask-web</artifactId>
+            <version>${project.version}</version>
+            <type>war</type>
+        </dependency>
+    </dependencies>
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>2.0.2</version>
+                <configuration>
+                    <source>1.5</source>
+                    <target>1.5</target>
+                </configuration>
+            </plugin>
+            <!--
+                The ear plugin must include the definition for "modules",
+                for any modules that are needed to be included in the EAR file,
+                you need to specify them one by one, e.g. "ejbModule", "webModule",
+                "jarModule" and "appClientModule".
+            -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-ear-plugin</artifactId>
+                <version>2.6</version>
+                <configuration>
+                    <version>5</version>
+                    <defaultLibBundleDir>lib</defaultLibBundleDir>
+                    <modules>
+                        <ejbModule>
+                            <groupId>com.gotoque.torotask</groupId>
+                            <artifactId>ToroTask-ejb</artifactId>
+                        </ejbModule>
+                        <webModule>
+                            <groupId>com.gotoque.torotask</groupId>
+                            <artifactId>ToroTask-web</artifactId>
+                            <context-root>/ToroTask</context-root>
+                        </webModule>
+                        <jarModule>
+                            <groupId>com.gotoque.torotask.vo</groupId>
+                            <artifactId>ToroTask-vo</artifactId>
+                        </jarModule>
+                        <jarModule>
+                            <groupId>com.gotoque.torotask</groupId>
+                            <artifactId>ToroTask-dao</artifactId>
+                        </jarModule>
+                    </modules>
+                </configuration>
+            </plugin>
+ 
+            <!-- JBoss App Server -->
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>jboss-maven-plugin</artifactId>
+                <version>1.5.0</version>
+                <!--executions>
+                    <execution>
+                        <id>jboss-undeploy</id>
+                        <goals>
+                            <goal>undeploy</goal>
+                        </goals>
+                        <phase>clean</phase>
+                    </execution>
+                    <execution>
+                        <id>jboss-deploy</id>
+                        <goals>
+                            <goal>deploy</goal>
+                        </goals>
+                        <phase>package</phase>
+                    </execution>
+                </executions-->
+                <configuration>
+                    <!--jbossHome>${jboss.directory}</jbossHome-->
+                    <hostName>localhost</hostName>
+                    <port>8080</port>
+                    <fileNames>
+                        <fileName>${basedir}/target/ToroTask-ear-1.0-SNAPSHOT.ear</fileName>
+                    </fileNames>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+
+</project>

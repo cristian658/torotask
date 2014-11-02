@@ -1,0 +1,298 @@
+				html{
+				 background :#4a4d54;
+				}
+				#columna {
+					float: left;
+					width: 22%;
+					height: 750px;
+				}
+
+				#cuerpo {
+					float: left;
+					width: 77%;
+					height: 750px;
+				}
+			
+			
+                #vertical {
+                    height: 750px;
+                    width: 100%;
+                }
+
+                #left-pane, #center-pane, #right-pane  { background-color: rgba(60, 70, 80, 0.05); }
+
+				#tabstrip {
+                    width: 100%;
+                }
+				#tabstrip h2 {
+                    font-weight: lighter;
+                    font-size: 5em;
+                    padding: 0;
+                    margin: 0;
+                }
+                #tabstrip h2 span {
+                    background: none;
+                    padding-left: 5px;
+                    font-size: .5em;
+                    vertical-align: top;
+                }
+
+                #tabstrip p {
+                    margin: 0;
+                    padding: 0;
+                }
+				#special-days {
+                    height: 500px;
+                    width: 100%;
+                    margin: 0;
+                    padding: 0;
+                    background: url('img/calendar-template.jpg') transparent no-repeat 0 bottom;
+                }
+                #calendar {
+                    margin: 20px 0 0 265px;
+                    width: 340px;
+                    text-align: center;
+                }
+                #calendar .k-content {
+                    height: 300px;
+                }
+                #calendar,
+                #calendar .k-content,
+                #calendar .k-header,
+                #calendar th,
+                #calendar .k-link,
+                #calendar .k-state-hover,
+                #calendar .k-state-selected,
+                #calendar .k-state-focused {
+                    background: transparent;
+                    border-color: transparent;
+                    color: #fff;
+                    box-shadow: none;
+                }
+                #calendar .k-content .k-state-hover,
+                #calendar .k-content .k-state-focused {
+                    font-size: 14px;
+                    font-weight: bold;
+                }
+                #calendar .k-state-selected, #calendar .k-state-selected.k-state-focused {
+                    font-size: 24px;
+                    font-weight: bold;
+                }
+                #calendar .k-content .k-link {
+                    padding: 0;
+                    min-height: 40px;
+                    line-height: 40px;
+                }
+                #calendar th {
+                    padding-top: 20px;
+                    color: #8cbabf;
+                }
+                #calendar td.k-other-month .k-link {
+                    color: #8cbabf;
+                }
+                #calendar th,
+                #calendar td {
+                    text-align: center;
+                }
+
+                /* Template Days */
+                .exhibition, .party, .cocktail {
+                        width: 40px;
+                        height: 40px;
+                        margin: auto;
+                        -webkit-border-radius: 100px;
+                        -moz-border-radius: 100px;
+                        border-radius: 50%;
+                        line-height: 40px;
+                }
+                .exhibition {
+                    background-color: #fff;
+                    color: #000;
+                }
+                .party {
+                    background-color: #70c114;
+                }
+                .cocktail {
+                    background-color: #00a1e8;
+                }				
+				.k-nav-current > .k-link span + span {
+					max-width: 200px;
+					display: inline-block;
+					white-space: nowrap;
+					text-overflow: ellipsis;
+					overflow: hidden;
+					vertical-align: top;
+				}
+				#team-schedule {
+					height: 115px;
+					position: relative;
+				}
+				.teamMate:after {
+                    content: ".";
+                    display: block;
+                    height: 0;
+                    line-height: 0;
+                    clear: both;
+                    visibility: hidden;
+                }
+                .teamMate p {
+                    margin: 0 0;
+					padding-top: 30px;
+                }
+                .teamMate img {
+                    float: left;
+                    margin: 5px 15px 5px 5px;
+                    border: 1px solid #ccc;
+                }			
+				.fecha{
+					padding-left: 10px;
+					color: #999999;
+				}
+				.usuario{
+					font-family: proxima-nova, "Helvetica Neue", Arial, sans-serif;
+					color: #999999;
+					font-size: 15px;					
+				}
+				.comentarios_g{
+					border-top: 1px solid #e5e5e5;
+					height: 150px; 
+					overflow-y: scroll;
+				}
+				.comentarios{
+					border-top: 1px solid #e5e5e5;
+					width: 760px; 
+					height: 150px; 
+					overflow-y: scroll;
+				}
+				.k-upload-files{
+					overflow-y: scroll;
+					height: 80px;
+				}
+				.comentario{
+					border-top: 1px solid #e5e5e5;
+					background-color: #f5f9fc;
+				}
+				.bloque{
+					padding: 10px 10px 10px 10px; 
+					border-top: 1px solid #f5f9fc;
+					background-color:#F7F8E0;
+				}
+				.k-editor-field{
+					padding: 5px 5px 5px 10px;
+					width: 760px;
+				}
+				.editor-input{
+					color:#999999;
+					width: 760px;
+					border-radius: 4px;
+					height: 20px;
+					border-color: gainsboro;
+				}			
+				.k-edit-buttons{
+					width: 760px;
+				}	
+				.well {
+					min-height: 20px;
+					padding: 19px;
+					margin-bottom: 20px;
+					background-color: #f5f5f5;
+					border: 1px solid #e3e3e3;
+					border-radius: 4px;
+					-webkit-box-shadow: inset 0 1px 1px rgba(0,0,0,0.05);
+					box-shadow: inset 0 1px 1px rgba(0,0,0,0.05);
+				}
+				#profile {
+					position: relative;
+				}
+				.ra-well-title {
+					font-size: 1.2857em;
+					line-height: 1.2857em;
+					border-bottom: 1px solid #e7e7e7;
+					margin: -5px -19px 0.8333em;
+					padding: 0 19px 0.7222em;
+				}
+				.row {
+					margin-right: -15px;
+					margin-left: -15px;
+				}
+				.select-estado{
+					width: 80px;
+				}
+                .logo h2 {
+                    font-size: 1.4em;
+                    font-weight: normal;
+                    padding-top: 20px;
+                }
+                .logo p {
+                    margin: 5px 0;
+                }
+                .logo img {
+                    float: left;
+                    margin: 5px 15px 5px 5px;
+                }
+				.k-tab-on-top{
+					color: #000;
+				}
+				.k-edit-form-container {
+				position: relative;
+				width: 780px;
+				height: 520px;
+				}
+				
+				#headerleftcontainer {
+					display: table-cell;
+					vertical-align: middle;
+					background-color: #FF6600;
+					width: 25%;
+				}
+				#headerdetailsdatecontainer {
+					margin-left: 25px;
+					width: 65px;
+					float: left;
+				}
+				#headerdetailsdate {
+					border-bottom: 1px solid rgba(255,255,255,0.7);
+				}
+				#headerdetailsdateday {
+					font-size: 22px;
+				}
+				#headerdetailstime {
+					width: 70px;
+					height: 30px;
+					text-align: center;
+				}
+				#headerdetailstitle {
+					margin-left: 25px;
+					margin-right: 10px;
+					font-size: 28px;
+					float: left;
+					height: 50px;
+					line-height: 50px;
+					overflow: hidden;
+					white-space: nowrap;
+					border-right: 1px solid rgba(255,255,255,0.7);
+					width: 240px;
+				}
+				#headerdetailsusercontainer {
+					color: rgba(255,255,255,0.65);
+					border-left: 1px solid rgba(255,255,255,0.7);
+				}
+				.headerdetailsusertitle {
+					margin-top: 0;
+				}
+				.headerdetailsusercontainervalues, .headerdetailsusercontainervalueslink {
+					color: rgba(255,255,255,1) !important;
+					text-decoration: none;
+				}				
+				#headerdetailscontainer {
+					color: rgba(255,255,255,0.65);
+				}				
+				.k-iconsa{
+					background-image: url('img/icon_project.png');
+				}
+				#tabstrip-1{
+					height: 645px !important;
+				}
+				#tabstrip-2{
+					height: 645px !important;
+				}

@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE struts-config PUBLIC "-//Apache Software Foundation//DTD Struts Configuration 1.1//EN" "http://jakarta.apache.org/struts/dtds/struts-config_1_1.dtd">
+
+<struts-config>
+	<form-beans>
+		<form-bean name="distribuidorForm" 	type="com.gotoque.torotask.presentacion.struts.form.IngresoForm" />
+	</form-beans>
+
+	<global-forwards>
+    <forward name="nointermediario" path="/jsp/nointermediario.jsp" />
+    <forward name="sinpermiso" path="/jsp/sinpermiso.jsp" />
+    <forward name="error" path="/jsp/error.jsp" />
+		
+		
+				
+	</global-forwards>
+
+	<action-mappings>
+    <action
+      attribute="distribuidorForm"
+      name="distribuidorForm"
+      parameter="toMethod"
+      path="/distribuidor"
+      scope="request"
+      type="com.gotoque.torotask.presentacion.struts.action.IngresoAction"
+      validate="false" >
+      <forward name="continuar" path="/jsp/portal/Overview.jsp" />
+    </action>
+ 
+		
+	</action-mappings> 
+
+	<message-resources parameter="com.gotoque.torotask.struts.ApplicationResources" />
+</struts-config>
