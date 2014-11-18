@@ -3,6 +3,7 @@ package com.gotoque.torotask.vo;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.Vector;
 
 public class TareaVO implements Serializable{
 	
@@ -12,7 +13,7 @@ public class TareaVO implements Serializable{
 	 * 
 	 */
 	private static final long serialVersionUID = -6707274218352999691L;
-	Integer Id;
+	int Id;
 	String idtarea;
 	String tarea;
 	String descripcion;
@@ -20,37 +21,79 @@ public class TareaVO implements Serializable{
 	String fecha_inicio;
 	String fechaTerminoEstimada;
 	String fechaTerminoReal;
-	ArrayList usuarioVO;
+	Vector integrantes;
+	Vector comentarios;
+	Vector adjuntos;
+	ProyectoVO proyectoVO;
+	UsuarioVO usuarioVO;
 	String estado;
-	Integer totalDias = 0;
-	Integer diasTareas = 0;
-	Double porcentaje = 0D;
-	String Summary;
-	String Expanded;
+	int totalDias = 0;
+	int diasTareas = 0;
+	double porcentaje = 0D;
+	String summary;
+	String expanded;
+	String usuario;
+	String idUsuario;
+	String proyecto = "";
+	String cierreDiasEstimada;
+	String cierreDiasReal;
+	String totalDiasEstimada;
+	String totalDiasReal;
 	
-	public Integer getId() {
-		return Id;
+	public String getCierreDiasEstimada() {
+		return cierreDiasEstimada;
 	}
-	public void setId(Integer id) {
-		Id = id;
+	public void setCierreDiasEstimada(String cierreDiasEstimada) {
+		this.cierreDiasEstimada = cierreDiasEstimada;
+	}
+	public String getCierreDiasReal() {
+		return cierreDiasReal;
+	}
+	public void setCierreDiasReal(String cierreDiasReal) {
+		this.cierreDiasReal = cierreDiasReal;
 	}
 	public String getExpanded() {
-		return Expanded;
+		return expanded;
 	}
 	public void setExpanded(String expanded) {
-		Expanded = expanded;
-	}
-	public Double getPorcentaje() {
-		return porcentaje;
-	}
-	public void setPorcentaje(Double porcentaje) {
-		this.porcentaje = porcentaje;
+		this.expanded = expanded;
 	}
 	public String getSummary() {
-		return Summary;
+		return summary;
 	}
 	public void setSummary(String summary) {
-		Summary = summary;
+		this.summary = summary;
+	}
+	public String getUsuario() {
+		return usuario;
+	}
+	public void setUsuario(String usuario) {
+		this.usuario = usuario;
+	}
+	public int getId() {
+		return Id;
+	}
+	public void setId(int id) {
+		Id = id;
+	}
+	
+	public String getIdUsuario() {
+		return idUsuario;
+	}
+	public void setIdUsuario(String idUsuario) {
+		this.idUsuario = idUsuario;
+	}
+	public UsuarioVO getUsuarioVO() {
+		return usuarioVO;
+	}
+	public ProyectoVO getProyectoVO() {
+		return proyectoVO;
+	}
+	public void setProyectoVO(ProyectoVO proyectoVO) {
+		this.proyectoVO = proyectoVO;
+	}
+	public void setUsuarioVO(UsuarioVO usuarioVO) {
+		this.usuarioVO = usuarioVO;
 	}
 	public String getDescripcion() {
 		return descripcion;
@@ -58,8 +101,36 @@ public class TareaVO implements Serializable{
 	public void setDescripcion(String descripcion) {
 		this.descripcion = descripcion;
 	}
-
-
+	public Vector getAdjuntos() {
+		return adjuntos;
+	}
+	public void setAdjuntos(Vector adjuntos) {
+		this.adjuntos = adjuntos;
+	}
+	public Vector getComentarios() {
+		return comentarios;
+	}
+	public void setComentarios(Vector comentarios) {
+		this.comentarios = comentarios;
+	}
+	public Vector getIntegrantes() {
+		return integrantes;
+	}
+	public String getTotalDiasEstimada() {
+		return totalDiasEstimada;
+	}
+	public void setTotalDiasEstimada(String totalDiasEstimada) {
+		this.totalDiasEstimada = totalDiasEstimada;
+	}
+	public String getTotalDiasReal() {
+		return totalDiasReal;
+	}
+	public void setTotalDiasReal(String totalDiasReal) {
+		this.totalDiasReal = totalDiasReal;
+	}
+	public void setIntegrantes(Vector integrantes) {
+		this.integrantes = integrantes;
+	}
 	public String getFecha_inicio() {
 		return fecha_inicio;
 	}
@@ -102,27 +173,29 @@ public class TareaVO implements Serializable{
 	public void setEstado(String estado) {
 		this.estado = estado;
 	}
-	public ArrayList getUsuarioVO() {
-		return usuarioVO;
-	}
-	public void setUsuarioVO(ArrayList usuarioVO) {
-		this.usuarioVO = usuarioVO;
-	}
-	public Integer getDiasTareas() {
+	public int getDiasTareas() {
 		return diasTareas;
 	}
-	public void setDiasTareas(Integer diasTareas) {
-		if(diasTareas!=null){
-			this.diasTareas = diasTareas;
-		}
+	public void setDiasTareas(int diasTareas) {
+		this.diasTareas = diasTareas;
 	}
-	public Integer getTotalDias() {
+	public double getPorcentaje() {
+		return porcentaje;
+	}
+	public void setPorcentaje(double porcentaje) {
+		this.porcentaje = porcentaje;
+	}
+	public int getTotalDias() {
 		return totalDias;
 	}
-	public void setTotalDias(Integer totalDias) {
-		if(totalDias!=null){
-			this.totalDias = totalDias;
-		}
+	public void setTotalDias(int totalDias) {
+		this.totalDias = totalDias;
+	}
+	public String getProyecto() {
+		return proyecto;
+	}
+	public void setProyecto(String proyecto) {
+		this.proyecto = proyecto;
 	}
 	
 }

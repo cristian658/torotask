@@ -17,7 +17,15 @@ public class AdjuntoVO implements Serializable{
 	String fecha;
 	String contentType;
 	String idtarea;
+	String usuario;
 	
+	
+	public String getUsuario() {
+		return usuario;
+	}
+	public void setUsuario(String usuario) {
+		this.usuario = usuario;
+	}
 	public String getIdtarea() {
 		return idtarea;
 	}

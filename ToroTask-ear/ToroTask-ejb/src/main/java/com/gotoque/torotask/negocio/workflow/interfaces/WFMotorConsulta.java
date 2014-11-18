@@ -3,6 +3,8 @@
  */
 package com.gotoque.torotask.negocio.workflow.interfaces;
 
+import com.gotoque.torotask.vo.TareaVO;
+
 /**
  * Remote interface for WFMotorConsulta.
  * @xdoclet-generated at ${TODAY}
@@ -19,4 +21,5 @@ public interface WFMotorConsulta
 
    public java.util.Vector executeQuery( java.util.Hashtable pParameters,java.lang.String pCommandService )
    	throws java.lang.Exception, java.rmi.RemoteException;
+
 }

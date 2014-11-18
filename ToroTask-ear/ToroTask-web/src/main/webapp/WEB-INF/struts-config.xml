@@ -3,32 +3,58 @@
 
 <struts-config>
 	<form-beans>
-		<form-bean name="distribuidorForm" 	type="com.gotoque.torotask.presentacion.struts.form.IngresoForm" />
+		<form-bean name="calendarioForm" type="com.gotoque.torotask.presentacion.struts.form.CalendarioForm" />
+		<form-bean name="ganttForm" type="com.gotoque.torotask.presentacion.struts.form.GanttForm" />
+		<form-bean name="recursosForm" type="com.gotoque.torotask.presentacion.struts.form.RecurosForm" />
+		<form-bean name="reportesForm" type="com.gotoque.torotask.presentacion.struts.form.ReportesForm" />
+		<form-bean name="accesoForm" type="com.gotoque.torotask.presentacion.struts.form.AccesoForm" />
+                <form-bean name="loginForm" type="com.gotoque.torotask.presentacion.struts.form.LoginForm" />
 	</form-beans>
 
 	<global-forwards>
-    <forward name="nointermediario" path="/jsp/nointermediario.jsp" />
-    <forward name="sinpermiso" path="/jsp/sinpermiso.jsp" />
-    <forward name="error" path="/jsp/error.jsp" />
-		
-		
-				
+		<forward name="error" path="/jsp/error.jsp" />
 	</global-forwards>
 
 	<action-mappings>
-    <action
-      attribute="distribuidorForm"
-      name="distribuidorForm"
-      parameter="toMethod"
-      path="/distribuidor"
-      scope="request"
-      type="com.gotoque.torotask.presentacion.struts.action.IngresoAction"
-      validate="false" >
-      <forward name="continuar" path="/jsp/portal/Overview.jsp" />
-    </action>
- 
-		
-	</action-mappings> 
+		<action attribute="calendarioForm" name="calendarioForm"
+			parameter="toMethod" path="/calendario" scope="request"
+			type="com.gotoque.torotask.presentacion.struts.action.CalendarioAction"
+			validate="false">
+			<forward name="continuar" path="/calendario.jsp" />
+		</action>
+		<action attribute="ganttForm" name="ganttForm"
+			parameter="toMethod" path="/gantt" scope="request"
+			type="com.gotoque.torotask.presentacion.struts.action.GanttAction"
+			validate="false">
+			<forward name="continuar" path="/gantt.jsp" />
+		</action>
+		<action attribute="recursosForm" name="recursosForm"
+			parameter="toMethod" path="/recursos" scope="request"
+			type="com.gotoque.torotask.presentacion.struts.action.RecursosAction"
+			validate="false">
+			<forward name="continuar" path="/recurso.jsp" />
+		</action>
+		<action attribute="reportesForm" name="reportesForm"
+			parameter="toMethod" path="/reportes" scope="request"
+			type="com.gotoque.torotask.presentacion.struts.action.ReportesAction"
+			validate="false">
+			<forward name="continuar" path="/reporte.jsp" />
+		</action>				
+		<action attribute="accesoForm" name="accesoForm"
+			parameter="toMethod" path="/acceso" scope="request"
+			type="com.gotoque.torotask.presentacion.struts.action.AccesoAction"
+			validate="false">
+			<forward name="continuar" path="/index.jsp" />
+		</action>
+                <action attribute="loginForm" name="loginForm"
+			parameter="toMethod" path="/login" scope="request"
+			type="com.gotoque.torotask.presentacion.struts.action.LoginAction"
+			validate="false">
+			<forward name="continuar" path="/login.jsp" />
+		</action>
 
-	<message-resources parameter="com.gotoque.torotask.struts.ApplicationResources" />
+	</action-mappings>
+
+	<message-resources
+		parameter="com.gotoque.torotask.struts.ApplicationResources" />
 </struts-config>

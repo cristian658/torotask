@@ -9,7 +9,7 @@ public class ComentarioVO implements Serializable{
 	
 		String idComentario;
 		String comentario;
-		Date fecha;
+		String fecha;
 		String usuario;
 		String idtarea;
 		
@@ -19,10 +19,10 @@ public class ComentarioVO implements Serializable{
 		public void setComentario(String comentario) {
 			this.comentario = comentario;
 		}
-		public Date getFecha() {
+		public String getFecha() {
 			return fecha;
 		}
-		public void setFecha(Date fecha) {
+		public void setFecha(String fecha) {
 			this.fecha = fecha;
 		}
 		public String getIdComentario() {

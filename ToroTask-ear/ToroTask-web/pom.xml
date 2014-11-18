@@ -27,6 +27,7 @@
             <groupId>javax.ejb</groupId>
             <artifactId>ejb-api</artifactId>
             <version>3.0</version>
+            <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>poi</groupId>
@@ -58,6 +59,14 @@
             <groupId>${project.groupId}</groupId>
             <artifactId>ToroTask-ejb</artifactId>
             <version>${project.version}</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>javax.mail</groupId>
+            <artifactId>javax.mail</artifactId>
+            <version>1.4.0.v201005080615</version>
+            <type>jar</type>
+            <scope>provided</scope>
         </dependency>
     </dependencies>
 

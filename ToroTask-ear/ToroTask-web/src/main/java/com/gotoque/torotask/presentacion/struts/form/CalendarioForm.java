@@ -6,7 +6,7 @@ import org.apache.struts.action.ActionForm;
 import org.apache.struts.upload.FormFile;
 
 
-public class IngresoForm extends ActionForm {
+public class CalendarioForm extends ActionForm {
 	
 	private static final long serialVersionUID = -8033262566568503830L;
 

@@ -1,29 +1,17 @@
 package com.gotoque.torotask.presentacion.servlet;
 
 import java.io.IOException;
-import java.io.PrintWriter;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map;
+import java.util.Hashtable;
 import java.util.Vector;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
-import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.poi.hssf.usermodel.HSSFRichTextString;
-import org.apache.poi.hssf.usermodel.HSSFRow;
-import org.apache.poi.hssf.usermodel.HSSFSheet;
-import org.apache.poi.hssf.usermodel.HSSFWorkbook;
-
+import com.gotoque.torotask.presentacion.delegate.BDWFMotorConsulta;
 import com.gotoque.torotask.presentacion.struts.Utilidades.JSONArray;
-import com.gotoque.torotask.presentacion.struts.Utilidades.JSONObject;
-import java.util.Collection;
-
 
 public class getTarea extends HttpServlet {
 
@@ -46,8 +34,35 @@ public class getTarea extends HttpServlet {
 	 */
 	public void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
+			
+			String online = request.getParameter("online");
+			String idtarea = request.getParameter("id");
+			Hashtable hParameters = new Hashtable();
+			
+			BDWFMotorConsulta oBDWFMotorConsulta;
+			RequestDispatcher dispatcher = null;
+			try {
+				oBDWFMotorConsulta = new BDWFMotorConsulta();
+				hParameters.put("idtarea", idtarea);
+				Vector vectorTareas = (Vector)oBDWFMotorConsulta.getConsultarIdTarea(hParameters);
+				Vector vectorComentarios = oBDWFMotorConsulta.getConsultarComentarios(hParameters);
+				Vector vectorAdjuntos = oBDWFMotorConsulta.getConsultarAdjuntos(hParameters);
+				Vector vectorIntegrantes = oBDWFMotorConsulta.getConsultaIntegrantesxTarea(hParameters);
+				
+				request.setAttribute("tarea", new JSONArray(vectorTareas).getJSONArray(0).getJSONObject(0));
+				request.setAttribute("comentarios", new JSONArray(vectorComentarios));
+				request.setAttribute("adjuntos", new JSONArray(vectorAdjuntos));
+				request.setAttribute("integrantes", new JSONArray(vectorIntegrantes));
+				if(online.equals("true")){
+					dispatcher = getServletContext().getRequestDispatcher("/jsp/pdf/printTarea.jsp");				
+				}else{
+					dispatcher = getServletContext().getRequestDispatcher("/jsp/pdf/pdfTarea.jsp");				
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+				dispatcher = getServletContext().getRequestDispatcher("/jsp/error.jsp");				
+			}
 
-			RequestDispatcher dispatcher = getServletContext().getRequestDispatcher("/PrintTarea.jsp");
 			dispatcher.forward(request, response);
 			
 	}

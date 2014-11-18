@@ -14,6 +14,44 @@ public class UsuarioVO implements Serializable{
 	String apellidoMaterno;
 	String correo;
 	String anexo;
+	String cargo;
+	int tareasTotal = 0;
+	int tareasRealizadas = 0;
+	int tareasActivas = 0;
+	int tareasAtrazadas = 0;
+	
+
+
+	public int getTareasActivas() {
+		return tareasActivas;
+	}
+	public void setTareasActivas(int tareasActivas) {
+		this.tareasActivas = tareasActivas;
+	}
+	public int getTareasAtrazadas() {
+		return tareasAtrazadas;
+	}
+	public void setTareasAtrazadas(int tareasAtrazadas) {
+		this.tareasAtrazadas = tareasAtrazadas;
+	}
+	public int getTareasRealizadas() {
+		return tareasRealizadas;
+	}
+	public void setTareasRealizadas(int tareasRealizadas) {
+		this.tareasRealizadas = tareasRealizadas;
+	}
+	public int getTareasTotal() {
+		return tareasTotal;
+	}
+	public void setTareasTotal(int tareasTotal) {
+		this.tareasTotal = tareasTotal;
+	}
+	public String getCargo() {
+		return cargo;
+	}
+	public void setCargo(String cargo) {
+		this.cargo = cargo;
+	}
 	public String getAnexo() {
 		return anexo;
 	}

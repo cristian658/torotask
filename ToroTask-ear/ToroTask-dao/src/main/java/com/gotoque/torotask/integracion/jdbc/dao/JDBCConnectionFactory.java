@@ -3,6 +3,8 @@ package com.gotoque.torotask.integracion.jdbc.dao;
 import java.sql.Connection;
 import java.sql.DriverManager;
 
+import com.gotoque.torotask.constantes.Constantes;
+
 public class JDBCConnectionFactory {
 
 	static String url = "jdbc:mysql://localhost:3306/";
@@ -22,5 +24,15 @@ public class JDBCConnectionFactory {
 		}
 		return conn;
 	}
-
+	
+    public static void closeSession(Connection currentSesion) {
+        try {
+            if ((currentSesion != null) && (!currentSesion.isClosed())) {
+                currentSesion.close();
+    			System.out.println("Close the database");                
+            }
+        } catch (Exception e) {
+        	e.printStackTrace();
+        }
+    }
 }
