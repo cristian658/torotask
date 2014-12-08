@@ -8,8 +8,5 @@ public class RecursosForm extends ActionForm {
 	 * 
 	 */
 	private static final long serialVersionUID = 8405825716305675214L;
-	
 
-
-	
 }

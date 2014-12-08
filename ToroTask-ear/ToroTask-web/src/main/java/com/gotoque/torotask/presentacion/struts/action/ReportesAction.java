@@ -19,16 +19,15 @@ import com.gotoque.torotask.presentacion.delegate.BDWFMotorConsulta;
 import com.gotoque.torotask.presentacion.struts.Utilidades.JSONArray;
 import com.gotoque.torotask.presentacion.struts.Utilidades.JSONObject;
 
-
 public class ReportesAction extends DispatchAction {
 
 	public ActionForward unspecified(ActionMapping mapping, ActionForm form,
 			HttpServletRequest request, HttpServletResponse response) {
-		
+
 		BDWFMotorConsulta oBDWFMotorConsulta;
 		Vector proyectos = new Vector();
 		Hashtable hParameters = new Hashtable();
-		
+
 		try {
 
 			SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
@@ -36,33 +35,32 @@ public class ReportesAction extends DispatchAction {
 			String fechaTermino = dateFormat.format(new Date()).toString();
 			String tipo = request.getParameter("tipo");
 			String id = request.getParameter("id");
-			
-			if(tipo==null)tipo="";
-			if(id==null)id="";
-			
+
+			if (tipo == null)tipo = "";
+			if (id == null)id = "";
+
 			request.setAttribute("fechaInicio", fechaInicio);
 			request.setAttribute("fechaTermino", fechaTermino);
 			request.setAttribute("tipo", tipo);
 			request.setAttribute("id", id);
-			
-			
+
 			oBDWFMotorConsulta = new BDWFMotorConsulta();
 			proyectos = oBDWFMotorConsulta.getConsultaProyectos(hParameters);
 			JSONArray object = new JSONArray(proyectos);
-			request.setAttribute("proyectos",object);
+			request.setAttribute("proyectos", object);
 		} catch (Exception e) {
 			e.printStackTrace();
 			String mensage = e.getMessage();
 			request.setAttribute("error", mensage);
 			return mapping.findForward("error");
-		}		
-		
+		}
+
 		return mapping.findForward("continuar");
 	}
-	
+
 	public ActionForward getConsultarReporteTarea(ActionMapping mapping,
 			ActionForm form, HttpServletRequest request,
-			HttpServletResponse response) {
+			HttpServletResponse response) {   
 
 		BDWFMotorConsulta oBDWFMotorConsulta;
 		Vector tareas = new Vector();
@@ -73,15 +71,15 @@ public class ReportesAction extends DispatchAction {
 			String termino = request.getParameter("termino");
 			String tipo = request.getParameter("tipo");
 			String id = request.getParameter("id");
-			
-			if(tipo==null)tipo="";
-			if(id==null)id="";
-			
-			if(inicio==null || termino == null){
+
+			if (tipo == null)tipo = "";
+			if (id == null)id = "";
+
+			if (inicio == null || termino == null) {
 				SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMdd");
 				inicio = dateFormat.format(sumarRestarDiasFecha(new Date(), -3)).toString();
-				termino = dateFormat.format(new Date()).toString();				
-			}else{
+				termino = dateFormat.format(new Date()).toString();
+			} else {
 				inicio = getFormatoFechaYYYYMMDD(inicio);
 				termino = getFormatoFechaYYYYMMDD(termino);
 			}
@@ -103,19 +101,20 @@ public class ReportesAction extends DispatchAction {
 			request.setAttribute("error", mensage);
 			return mapping.findForward("error");
 		}
-	}	
+	}
 	
-	private Date sumarRestarDiasFecha(Date fecha, int meses){
-		
+	
+	private Date sumarRestarDiasFecha(Date fecha, int meses) {
+
 		Calendar calendar = Calendar.getInstance();
 		calendar.setTime(fecha);
-		calendar.add(Calendar.MONTH,meses);
-		
+		calendar.add(Calendar.MONTH, meses);
+
 		return calendar.getTime();
 	}
 
-	private String getFormatoFechaYYYYMMDD(String fecha){
-		
+	private String getFormatoFechaYYYYMMDD(String fecha) {
+
 		SimpleDateFormat entrada = new SimpleDateFormat("dd/MM/yyyy");
 		SimpleDateFormat salida = new SimpleDateFormat("yyyyMMdd");
 		String resultado = "";
@@ -125,8 +124,8 @@ public class ReportesAction extends DispatchAction {
 			resultado = salida.format(date);
 		} catch (Exception e) {
 			e.getStackTrace();
-		}		
+		}
 		return resultado;
 	}
-	
+
 }

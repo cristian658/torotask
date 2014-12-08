@@ -7,19 +7,22 @@ import com.gotoque.torotask.vo.TareaVO;
 
 /**
  * Remote interface for WFMotorConsulta.
+ * 
  * @xdoclet-generated at ${TODAY}
  * @copyright The XDoclet Team
  * @author XDoclet
  * @version ${version}
  */
-public interface WFMotorConsulta
-   extends javax.ejb.EJBObject
-{
-   /**
-    * An example business method
-    * @throws EJBException Thrown if method fails due to system-level error.    */
+public interface WFMotorConsulta extends javax.ejb.EJBObject {
+	/**
+	 * An example business method
+	 * 
+	 * @throws EJBException
+	 *             Thrown if method fails due to system-level error.
+	 */
 
-   public java.util.Vector executeQuery( java.util.Hashtable pParameters,java.lang.String pCommandService )
-   	throws java.lang.Exception, java.rmi.RemoteException;
+	public java.util.Vector executeQuery(java.util.Hashtable pParameters,
+			java.lang.String pCommandService) throws java.lang.Exception,
+			java.rmi.RemoteException;
 
 }

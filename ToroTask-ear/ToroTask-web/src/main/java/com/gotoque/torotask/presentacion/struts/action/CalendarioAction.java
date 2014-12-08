@@ -4,10 +4,8 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.PrintWriter;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.Enumeration;
 import java.util.Hashtable;
@@ -17,7 +15,6 @@ import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.struts.action.ActionErrors;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
@@ -26,47 +23,69 @@ import org.apache.struts.upload.CommonsMultipartRequestHandler;
 import org.apache.struts.upload.FormFile;
 
 import com.gotoque.torotask.presentacion.delegate.BDWFMotorConsulta;
-import com.gotoque.torotask.presentacion.struts.Utilidades.EnviarEmail;
 import com.gotoque.torotask.presentacion.struts.Utilidades.JSONArray;
 import com.gotoque.torotask.presentacion.struts.Utilidades.JSONException;
 import com.gotoque.torotask.presentacion.struts.Utilidades.JSONObject;
+import com.gotoque.torotask.presentacion.struts.Utilidades.Utilidades;
 import com.gotoque.torotask.presentacion.struts.form.CalendarioForm;
-import com.gotoque.torotask.vo.AdjuntoVO;
-import com.gotoque.torotask.vo.ProyectoVO;
 
 public class CalendarioAction extends DispatchAction {
-
-	String idUsuario = "1";
 
 	public ActionForward unspecified(ActionMapping mapping, ActionForm form,
 			HttpServletRequest request, HttpServletResponse response) {
 
-		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+		SimpleDateFormat dateFormat = new SimpleDateFormat(Messages.getString("CalendarioAction.1")); //$NON-NLS-1$
 		String fechaHoy = dateFormat.format(new Date()).toString();
-
-		request.setAttribute("fechaHoy", fechaHoy);
-		request.setAttribute("fechaStartTime", fechaHoy + " 08:00");
-		request.setAttribute("fechaEndTime", fechaHoy + " 13:00");
 		
+		request.setAttribute(Messages.getString("CalendarioAction.2"), fechaHoy); //$NON-NLS-1$
+		request.setAttribute(Messages.getString("CalendarioAction.3"), fechaHoy + Messages.getString("CalendarioAction.4")); //$NON-NLS-1$ //$NON-NLS-2$
+		request.setAttribute(Messages.getString("CalendarioAction.5"), fechaHoy + Messages.getString("CalendarioAction.6")); //$NON-NLS-1$ //$NON-NLS-2$
+
 		BDWFMotorConsulta oBDWFMotorConsulta;
 		Vector proyectos = new Vector();
 		Hashtable hParameters = new Hashtable();
 		try {
-			
+
 			oBDWFMotorConsulta = new BDWFMotorConsulta();
 			proyectos = oBDWFMotorConsulta.getConsultaProyectos(hParameters);
 			JSONArray object = new JSONArray(proyectos);
-			request.setAttribute("proyectos",object);
+			request.setAttribute(Messages.getString("CalendarioAction.7"), object); //$NON-NLS-1$
 		} catch (Exception e) {
 			e.printStackTrace();
 			String mensage = e.getMessage();
-			request.setAttribute("error", mensage);
-			return mapping.findForward("error");
+			request.setAttribute(Messages.getString("CalendarioAction.8"), mensage); //$NON-NLS-1$
+			return mapping.findForward(Messages.getString("CalendarioAction.9")); //$NON-NLS-1$
 		}
 		
-		return mapping.findForward("continuar");
+		String inicioLaboral = (String)request.getSession().getAttribute("inicioLaboral");
+		String terminoLaboral = (String)request.getSession().getAttribute("terminoLaboral");		
+		request.setAttribute("fechaHoy", getFormatoFecha());
+		request.setAttribute("inicioLaboral", getFormatoFecha()+ " " + inicioLaboral);
+		request.setAttribute("terminoLaboral", getFormatoFecha()+ " " + terminoLaboral);
+		return mapping.findForward(Messages.getString("CalendarioAction.10")); //$NON-NLS-1$
+	}
+	
+	public ActionForward login(ActionMapping mapping, ActionForm form,
+			HttpServletRequest request, HttpServletResponse response) {
+
+		this.unspecified(mapping, form, request, response);
+		return mapping.findForward(Messages.getString("CalendarioAction.10")); //$NON-NLS-1$
 	}
 
+	private String getFormatoFecha() {
+		SimpleDateFormat salida = new SimpleDateFormat("yyyy-MM-dd");
+		String resultado = "";
+		try {
+			Date dia = new Date();
+			long long1 = dia.getTime();
+			Date date = new Date(long1);
+			resultado = salida.format(date);
+		} catch (Exception e) {
+			e.getStackTrace();
+		}
+		return resultado;
+	}	
+	
 	public ActionForward getConsultarTarea(ActionMapping mapping,
 			ActionForm form, HttpServletRequest request,
 			HttpServletResponse response) {
@@ -76,17 +95,23 @@ public class CalendarioAction extends DispatchAction {
 		Hashtable hParameters = new Hashtable();
 		try {
 			oBDWFMotorConsulta = new BDWFMotorConsulta();
+			JSONObject usuario = (JSONObject)request.getSession().getAttribute("usuario");
+			JSONObject perfilVO = usuario.getJSONObject("perfilVO");
+			String idUsuario = usuario.getString("idUsuario");
+			String idPerfil = perfilVO.getString("idPerfil");
+			hParameters.put("idUsuario",idUsuario);
+			hParameters.put("idPerfil",idPerfil);
 			tareas = oBDWFMotorConsulta.getConsultarTarea(hParameters);
 			PrintWriter out = response.getWriter();
 			JSONObject object = new JSONObject();
-			object.put("tareas", tareas);
+			object.put(Messages.getString("CalendarioAction.11"), tareas); //$NON-NLS-1$
 			out.print(object);
 			return null;
 		} catch (Exception e) {
 			e.printStackTrace();
 			String mensage = e.getMessage();
-			request.setAttribute("error", mensage);
-			return mapping.findForward("error");
+			request.setAttribute(Messages.getString("CalendarioAction.12"), mensage); //$NON-NLS-1$
+			return mapping.findForward(Messages.getString("CalendarioAction.13")); //$NON-NLS-1$
 
 		}
 	}
@@ -95,104 +120,110 @@ public class CalendarioAction extends DispatchAction {
 			ActionForm form, HttpServletRequest request,
 			HttpServletResponse response) {
 
-		String idtarea = request.getParameter("id");
+		String idtarea = request.getParameter(Messages.getString("CalendarioAction.14")); //$NON-NLS-1$
 
 		BDWFMotorConsulta oBDWFMotorConsulta;
 		Vector tareas = new Vector();
 		Hashtable hParameters = new Hashtable();
-		hParameters.put("idtarea", idtarea);
+		hParameters.put(Messages.getString("CalendarioAction.15"), idtarea); //$NON-NLS-1$
 		try {
 			oBDWFMotorConsulta = new BDWFMotorConsulta();
 			tareas = oBDWFMotorConsulta.getConsultarIdTarea(hParameters);
 			PrintWriter out = response.getWriter();
 			JSONObject object = new JSONObject();
-			object.put("tareas", tareas);
+			object.put(Messages.getString("CalendarioAction.16"), tareas); //$NON-NLS-1$
 			out.print(object);
 			return null;
 		} catch (Exception e) {
 			e.printStackTrace();
 			String mensage = e.getMessage();
-			request.setAttribute("error", mensage);
-			return mapping.findForward("error");
+			request.setAttribute(Messages.getString("CalendarioAction.17"), mensage); //$NON-NLS-1$
+			return mapping.findForward(Messages.getString("CalendarioAction.18")); //$NON-NLS-1$
 		}
 	}
 
 	public ActionForward setActualizaTarea(ActionMapping mapping,
 			ActionForm form, HttpServletRequest request,
-			HttpServletResponse response) {
+			HttpServletResponse response) throws Exception {
 
 		BDWFMotorConsulta oBDWFMotorConsulta;
 		Vector tareas = new Vector();
 		Vector proyectos = new Vector();
+		
+		JSONObject usuario = (JSONObject)request.getSession().getAttribute("usuario");
+		JSONObject perfilVO = usuario.getJSONObject("perfilVO");
+		String idUsuario = usuario.getString("idUsuario");
 
+		
 		Hashtable hParameters = new Hashtable();
 		try {
 			oBDWFMotorConsulta = new BDWFMotorConsulta();
-			String idtarea = request.getParameter("idtarea");
-			String idproyecto = request.getParameter("idproyecto");
-			String tarea = request.getParameter("tarea");
-			String estado = request.getParameter("estado");
-			String descripcion = request.getParameter("descripcion");
-			String comentario = request.getParameter("comentario");
-			String fechaInicio = request.getParameter("fechaInicio");
-			String fechaTermino = request.getParameter("fechaTermino");
-			String integrantes = request.getParameter("integrantes");
+			String idTarea = request.getParameter(Messages.getString("CalendarioAction.19")); //$NON-NLS-1$
+			String idproyecto = request.getParameter(Messages.getString("CalendarioAction.20")); //$NON-NLS-1$
+			String tarea = request.getParameter(Messages.getString("CalendarioAction.21")); //$NON-NLS-1$
+			String estado = request.getParameter(Messages.getString("CalendarioAction.22")); //$NON-NLS-1$
+			String descripcion = request.getParameter(Messages.getString("CalendarioAction.23")); //$NON-NLS-1$
+			String comentario = request.getParameter(Messages.getString("CalendarioAction.24")); //$NON-NLS-1$
+			String fechaInicio = request.getParameter(Messages.getString("CalendarioAction.25")); //$NON-NLS-1$
+			String fechaTermino = request.getParameter(Messages.getString("CalendarioAction.26")); //$NON-NLS-1$
+			String integrantes = request.getParameter(Messages.getString("CalendarioAction.27")); //$NON-NLS-1$
 
-			hParameters.put("idtarea", idtarea);
-			hParameters.put("tarea", tarea);
-			hParameters.put("estado", estado);
-			hParameters.put("descripcion", descripcion);
-			hParameters.put("fechaInicio", fechaInicio);
-			hParameters.put("fechaTermino", fechaTermino);
-			hParameters.put("fechaTermino", fechaTermino);
-			hParameters.put("comentario", comentario);
-			hParameters.put("idUsuario", idUsuario);
-			hParameters.put("integrantes", integrantes);
-			hParameters.put("idproyecto", idproyecto);
-			
-			
+			hParameters.put(Messages.getString("CalendarioAction.28"), idTarea); //$NON-NLS-1$
+			hParameters.put(Messages.getString("CalendarioAction.29"), tarea); //$NON-NLS-1$
+			hParameters.put(Messages.getString("CalendarioAction.30"), estado); //$NON-NLS-1$
+			hParameters.put(Messages.getString("CalendarioAction.31"), descripcion); //$NON-NLS-1$
+			hParameters.put(Messages.getString("CalendarioAction.32"), fechaInicio); //$NON-NLS-1$
+			hParameters.put(Messages.getString("CalendarioAction.33"), fechaTermino); //$NON-NLS-1$
+			hParameters.put(Messages.getString("CalendarioAction.34"), fechaTermino); //$NON-NLS-1$
+			hParameters.put(Messages.getString("CalendarioAction.35"), comentario); //$NON-NLS-1$
+			hParameters.put(Messages.getString("CalendarioAction.36"), idUsuario); //$NON-NLS-1$
+			hParameters.put(Messages.getString("CalendarioAction.37"), integrantes); //$NON-NLS-1$
+			hParameters.put(Messages.getString("CalendarioAction.38"), idproyecto); //$NON-NLS-1$
+
 			if (!isNumeric(idproyecto)) {
-				proyectos = oBDWFMotorConsulta.setConsultaIdProyecto(hParameters);
-				if (proyectos.size() > 0) {
-					proyectos = oBDWFMotorConsulta.setInsertaProyecto(hParameters);
-					idproyecto = proyectos.get(0).toString();
-					hParameters.put("idproyecto", idproyecto);
-				}
+				proyectos = oBDWFMotorConsulta.setInsertaProyecto(hParameters);
+				idproyecto = proyectos.get(0).toString();
+				hParameters.put(Messages.getString("CalendarioAction.39"), idproyecto); //$NON-NLS-1$
 			}
-			
-			if (idtarea.equals("0")) {
+
+			if (idTarea.equals(Messages.getString("CalendarioAction.40"))) { //$NON-NLS-1$
 				tareas = oBDWFMotorConsulta.setInsertaTarea(hParameters);
-				idtarea = tareas.get(0).toString();
-				hParameters.put("idtarea", idtarea);
+				Utilidades.setEnvioCorreoNuevo(idTarea);
+				idTarea = tareas.get(0).toString();
+				hParameters.put(Messages.getString("CalendarioAction.41"), idTarea); //$NON-NLS-1$
 			} else {
-				if (estado.equals("on")) {
+				if (estado.equals(Messages.getString("CalendarioAction.42"))) { //$NON-NLS-1$
 					tareas = oBDWFMotorConsulta.setActualizaTarea(hParameters);
+					Utilidades.setEnvioCorreoActualizacion(idTarea);
+				}else{
+					tareas = oBDWFMotorConsulta.setEliminaTarea(hParameters);					
+					Utilidades.setEnvioCorreoCierre(idTarea);
 				}
 			}
-			if (comentario != "") {
+			if (!comentario.equals(Messages.getString("CalendarioAction.43"))) { //$NON-NLS-1$
 				oBDWFMotorConsulta.setInsertaComentario(hParameters);
 			}
 
 			oBDWFMotorConsulta.setInsertaIntegrantexTarea(hParameters);
 
-			Vector adjuntos = (Vector) request.getSession().getAttribute("adjuntos");
+			Vector adjuntos = (Vector) request.getSession().getAttribute(Messages.getString("CalendarioAction.44")); //$NON-NLS-1$
 			if (adjuntos != null) {
 				for (int i = 0; i < adjuntos.size(); i++) {
 					Hashtable archivo = (Hashtable) adjuntos.get(i);
-					String nombre = (String) archivo.get("nombre");
-					Integer size = (Integer) archivo.get("size");
-					String contentType = (String) archivo.get("contentType");
-					byte[] fileData = (byte[]) archivo.get("fileData");
+					String nombre = (String) archivo.get(Messages.getString("CalendarioAction.45")); //$NON-NLS-1$
+					Integer size = (Integer) archivo.get(Messages.getString("CalendarioAction.46")); //$NON-NLS-1$
+					String contentType = (String) archivo.get(Messages.getString("CalendarioAction.47")); //$NON-NLS-1$
+					byte[] fileData = (byte[]) archivo.get(Messages.getString("CalendarioAction.48")); //$NON-NLS-1$
 					if (adjuntos != null) {
 						try {
-							hParameters.put("nombre", nombre);
-							hParameters.put("size", size);
-							hParameters.put("idtarea", idtarea);
-							hParameters.put("idUsuario", idUsuario);
-							hParameters.put("contentType", contentType);
+							hParameters.put(Messages.getString("CalendarioAction.49"), nombre); //$NON-NLS-1$
+							hParameters.put(Messages.getString("CalendarioAction.50"), size); //$NON-NLS-1$
+							hParameters.put(Messages.getString("CalendarioAction.51"), idTarea); //$NON-NLS-1$
+							hParameters.put(Messages.getString("CalendarioAction.52"), idUsuario); //$NON-NLS-1$
+							hParameters.put(Messages.getString("CalendarioAction.53"), contentType); //$NON-NLS-1$
 							Vector data = oBDWFMotorConsulta.setInsertaAdjuntos(hParameters);
 							String iddata = data.get(0).toString();
-							String path = "c:\\torotask\\" + iddata;
+							String path = (String)request.getSession().getAttribute("rutaDescarga") + iddata; //$NON-NLS-1$
 							File f = new File(path);
 							if (makeSureDirectoryExists(parent(f))) {
 								FileOutputStream out = new FileOutputStream(f);
@@ -206,20 +237,18 @@ public class CalendarioAction extends DispatchAction {
 					}
 				}
 			}
-			EnviarEmail enviarEmail = new EnviarEmail(idtarea);
-			enviarEmail.start();
-			request.getSession().setAttribute("adjuntos", null);
+			request.getSession().setAttribute(Messages.getString("CalendarioAction.55"), null); //$NON-NLS-1$
 			PrintWriter out = response.getWriter();
 			JSONObject object = new JSONObject();
-			object.put("tareas", tareas);
+			object.put(Messages.getString("CalendarioAction.56"), tareas); //$NON-NLS-1$
 			out.print(object);
 			return null;
 		} catch (Exception e) {
 			e.printStackTrace();
 			String mensage = e.getMessage();
-			request.setAttribute("error", mensage);
-			request.getSession().setAttribute("adjuntos", null);
-			return mapping.findForward("error");
+			request.setAttribute(Messages.getString("CalendarioAction.57"), mensage); //$NON-NLS-1$
+			request.getSession().setAttribute(Messages.getString("CalendarioAction.58"), null); //$NON-NLS-1$
+			return mapping.findForward(Messages.getString("CalendarioAction.59")); //$NON-NLS-1$
 		}
 	}
 
@@ -240,8 +269,8 @@ public class CalendarioAction extends DispatchAction {
 		} catch (Exception e) {
 			e.printStackTrace();
 			String mensage = e.getMessage();
-			request.setAttribute("error", mensage);
-			return mapping.findForward("error");
+			request.setAttribute(Messages.getString("CalendarioAction.60"), mensage); //$NON-NLS-1$
+			return mapping.findForward(Messages.getString("CalendarioAction.61")); //$NON-NLS-1$
 
 		}
 	}
@@ -263,8 +292,8 @@ public class CalendarioAction extends DispatchAction {
 		} catch (Exception e) {
 			e.printStackTrace();
 			String mensage = e.getMessage();
-			request.setAttribute("error", mensage);
-			return mapping.findForward("error");
+			request.setAttribute(Messages.getString("CalendarioAction.62"), mensage); //$NON-NLS-1$
+			return mapping.findForward(Messages.getString("CalendarioAction.63")); //$NON-NLS-1$
 
 		}
 	}
@@ -273,12 +302,24 @@ public class CalendarioAction extends DispatchAction {
 			ActionForm form, HttpServletRequest request,
 			HttpServletResponse response) {
 
+		JSONObject usuario = (JSONObject)request.getSession().getAttribute("usuario");
+		if(usuario==null)
+			return null;			
+		String idJefe = "0";
+		try {
+			idJefe = usuario.getString("idUsuario");
+		} catch (JSONException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+		String idTarea = request.getParameter("idtarea");
 		BDWFMotorConsulta oBDWFMotorConsulta;
 		Vector ingenieros = new Vector();
 		Hashtable hParameters = new Hashtable();
 		try {
 			oBDWFMotorConsulta = new BDWFMotorConsulta();
-			ingenieros = oBDWFMotorConsulta.getConsultaIntegrantes(hParameters);
+			hParameters.put("idJefe", idJefe);
+			ingenieros = oBDWFMotorConsulta.getConsultaEquipo(hParameters);
 			PrintWriter out = response.getWriter();
 			JSONArray Array = new JSONArray(ingenieros);
 			out.print(Array);
@@ -286,8 +327,8 @@ public class CalendarioAction extends DispatchAction {
 		} catch (Exception e) {
 			e.printStackTrace();
 			String mensage = e.getMessage();
-			request.setAttribute("error", mensage);
-			return mapping.findForward("error");
+			request.setAttribute(Messages.getString("CalendarioAction.64"), mensage); //$NON-NLS-1$
+			return mapping.findForward(Messages.getString("CalendarioAction.65")); //$NON-NLS-1$
 
 		}
 	}
@@ -309,8 +350,8 @@ public class CalendarioAction extends DispatchAction {
 		} catch (Exception e) {
 			e.printStackTrace();
 			String mensage = e.getMessage();
-			request.setAttribute("error", mensage);
-			return mapping.findForward("error");
+			request.setAttribute(Messages.getString("CalendarioAction.66"), mensage); //$NON-NLS-1$
+			return mapping.findForward(Messages.getString("CalendarioAction.67")); //$NON-NLS-1$
 
 		}
 	}
@@ -322,25 +363,24 @@ public class CalendarioAction extends DispatchAction {
 		BDWFMotorConsulta oBDWFMotorConsulta;
 		Vector integrantes = new Vector();
 		Hashtable hParameters = new Hashtable();
-		String idtarea = request.getParameter("idtarea");
+		String idtarea = request.getParameter(Messages.getString("CalendarioAction.68")); //$NON-NLS-1$
 		try {
 			oBDWFMotorConsulta = new BDWFMotorConsulta();
-			hParameters.put("idtarea", idtarea);
-			integrantes = oBDWFMotorConsulta
-					.getConsultaIntegrantesxTarea(hParameters);
+			hParameters.put(Messages.getString("CalendarioAction.69"), idtarea); //$NON-NLS-1$
+			integrantes = oBDWFMotorConsulta.getConsultaIntegrantesxTarea(hParameters);
 			PrintWriter out = response.getWriter();
 			JSONArray array = new JSONArray(integrantes);
 			Vector vector = new Vector();
 			for (int i = 0; i < array.length(); i++) {
-				vector.add(array.getJSONObject(i).get("idUsuario"));
+				vector.add(array.getJSONObject(i).get(Messages.getString("CalendarioAction.70"))); //$NON-NLS-1$
 			}
 			out.print(vector);
 			return null;
 		} catch (Exception e) {
 			e.printStackTrace();
 			String mensage = e.getMessage();
-			request.setAttribute("error", mensage);
-			return mapping.findForward("error");
+			request.setAttribute(Messages.getString("CalendarioAction.71"), mensage); //$NON-NLS-1$
+			return mapping.findForward(Messages.getString("CalendarioAction.72")); //$NON-NLS-1$
 
 		}
 	}
@@ -354,8 +394,8 @@ public class CalendarioAction extends DispatchAction {
 		Hashtable hParameters = new Hashtable();
 		try {
 			oBDWFMotorConsulta = new BDWFMotorConsulta();
-			String idtarea = request.getParameter("idtarea");
-			hParameters.put("idtarea", idtarea);
+			String idtarea = request.getParameter(Messages.getString("CalendarioAction.73")); //$NON-NLS-1$
+			hParameters.put(Messages.getString("CalendarioAction.74"), idtarea); //$NON-NLS-1$
 			adjuntos = oBDWFMotorConsulta.getConsultarAdjuntos(hParameters);
 			PrintWriter out = response.getWriter();
 			JSONArray object = new JSONArray(adjuntos);
@@ -364,8 +404,8 @@ public class CalendarioAction extends DispatchAction {
 		} catch (Exception e) {
 			e.printStackTrace();
 			String mensage = e.getMessage();
-			request.setAttribute("error", mensage);
-			return mapping.findForward("error");
+			request.setAttribute(Messages.getString("CalendarioAction.75"), mensage); //$NON-NLS-1$
+			return mapping.findForward(Messages.getString("CalendarioAction.76")); //$NON-NLS-1$
 
 		}
 	}
@@ -379,21 +419,20 @@ public class CalendarioAction extends DispatchAction {
 		Hashtable hParameters = new Hashtable();
 		try {
 			oBDWFMotorConsulta = new BDWFMotorConsulta();
-			String idtarea = request.getParameter("idtarea");
-			hParameters.put("idtarea", idtarea);
-			comentarios = oBDWFMotorConsulta
-					.getConsultarComentarios(hParameters);
+			String idtarea = request.getParameter(Messages.getString("CalendarioAction.77")); //$NON-NLS-1$
+			hParameters.put(Messages.getString("CalendarioAction.78"), idtarea); //$NON-NLS-1$
+			comentarios = oBDWFMotorConsulta.getConsultarComentarios(hParameters);
 			PrintWriter out = response.getWriter();
 			JSONObject object = new JSONObject();
-			object.put("comentarios", comentarios);
-			object.put("total", comentarios.size());
+			object.put(Messages.getString("CalendarioAction.79"), comentarios); //$NON-NLS-1$
+			object.put(Messages.getString("CalendarioAction.80"), comentarios.size()); //$NON-NLS-1$
 			out.print(object);
 			return null;
 		} catch (Exception e) {
 			e.printStackTrace();
 			String mensage = e.getMessage();
-			request.setAttribute("error", mensage);
-			return mapping.findForward("error");
+			request.setAttribute(Messages.getString("CalendarioAction.81"), mensage); //$NON-NLS-1$
+			return mapping.findForward(Messages.getString("CalendarioAction.82")); //$NON-NLS-1$
 
 		}
 	}
@@ -410,14 +449,14 @@ public class CalendarioAction extends DispatchAction {
 			estados = oBDWFMotorConsulta.getConsultarEstados(hParameters);
 			PrintWriter out = response.getWriter();
 			JSONObject object = new JSONObject();
-			object.put("estados", estados);
+			object.put(Messages.getString("CalendarioAction.83"), estados); //$NON-NLS-1$
 			out.print(object);
 			return null;
 		} catch (Exception e) {
 			e.printStackTrace();
 			String mensage = e.getMessage();
-			request.setAttribute("error", mensage);
-			return mapping.findForward("error");
+			request.setAttribute(Messages.getString("CalendarioAction.84"), mensage); //$NON-NLS-1$
+			return mapping.findForward(Messages.getString("CalendarioAction.85")); //$NON-NLS-1$
 
 		}
 	}
@@ -434,14 +473,14 @@ public class CalendarioAction extends DispatchAction {
 			tareas = oBDWFMotorConsulta.setEliminaTarea(hParameters);
 			PrintWriter out = response.getWriter();
 			JSONObject object = new JSONObject();
-			object.put("tareas", tareas);
+			object.put(Messages.getString("CalendarioAction.86"), tareas); //$NON-NLS-1$
 			out.print(object);
 			return null;
 		} catch (Exception e) {
 			e.printStackTrace();
 			String mensage = e.getMessage();
-			request.setAttribute("error", mensage);
-			return mapping.findForward("error");
+			request.setAttribute(Messages.getString("CalendarioAction.87"), mensage); //$NON-NLS-1$
+			return mapping.findForward(Messages.getString("CalendarioAction.88")); //$NON-NLS-1$
 
 		}
 	}
@@ -468,29 +507,28 @@ public class CalendarioAction extends DispatchAction {
 			HttpServletRequest request, HttpServletResponse response)
 			throws IOException, IOException {
 
-		CalendarioForm soporteForm = (CalendarioForm) form;
+		CalendarioForm calendarioForm = (CalendarioForm) form;
 
 		Enumeration e = null;
 		FormFile file = null;
 		Hashtable h = null;
 		Vector vector = new Vector();
-		CommonsMultipartRequestHandler cmrh = (CommonsMultipartRequestHandler) soporteForm
-				.getMultipartRequestHandler();
+		CommonsMultipartRequestHandler cmrh = (CommonsMultipartRequestHandler) calendarioForm.getMultipartRequestHandler();
 		h = cmrh.getFileElements();
 		try {
 			e = h.keys();
 			while (e.hasMoreElements()) {
 				String key = (String) e.nextElement();
 				file = (FormFile) h.get(key);
-				System.out.println("Field: " + key + ", FileName: " + file.getFileName() + ", size: " + file.getFileSize());
+				System.out.println(Messages.getString("CalendarioAction.89") + key + Messages.getString("CalendarioAction.90") + file.getFileName() + Messages.getString("CalendarioAction.91") + file.getFileSize()); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 				Hashtable adjuntos = new Hashtable();
-				adjuntos.put("nombre", file.getFileName());
-				adjuntos.put("size", new Integer(file.getFileSize()));
-				adjuntos.put("contentType", file.getContentType());
-				adjuntos.put("fileData", file.getFileData());
+				adjuntos.put(Messages.getString("CalendarioAction.92"), file.getFileName()); //$NON-NLS-1$
+				adjuntos.put(Messages.getString("CalendarioAction.93"), new Integer(file.getFileSize())); //$NON-NLS-1$
+				adjuntos.put(Messages.getString("CalendarioAction.94"), file.getContentType()); //$NON-NLS-1$
+				adjuntos.put(Messages.getString("CalendarioAction.95"), file.getFileData()); //$NON-NLS-1$
 				vector.add(adjuntos);
 			}
-			request.getSession().setAttribute("adjuntos", vector);
+			request.getSession().setAttribute(Messages.getString("CalendarioAction.96"), vector); //$NON-NLS-1$
 
 		} catch (NullPointerException ex) {
 			System.out.println(ex.getStackTrace());
@@ -507,18 +545,18 @@ public class CalendarioAction extends DispatchAction {
 		Hashtable hParameters = new Hashtable();
 
 		try {
-			String idDescarga = request.getParameter("wsdl");
-			hParameters.put("idadjunto", idDescarga);
+			String idDescarga = request.getParameter(Messages.getString("CalendarioAction.97")); //$NON-NLS-1$
+			hParameters.put(Messages.getString("CalendarioAction.98"), idDescarga); //$NON-NLS-1$
 			oBDWFMotorConsulta = new BDWFMotorConsulta();
 			adjuntos = oBDWFMotorConsulta.getDescargarAdjunto(hParameters);
 
 			for (int i = 0; i < adjuntos.size(); i++) {
 
-				String nombre = adjuntos.get(i).toString().split("#")[0];
-				String content = adjuntos.get(i).toString().split("#")[1];
+				String nombre = adjuntos.get(i).toString().split(Messages.getString("CalendarioAction.99"))[0]; //$NON-NLS-1$
+				String content = adjuntos.get(i).toString().split(Messages.getString("CalendarioAction.100"))[1]; //$NON-NLS-1$
 				response.setContentType(content);
-				response.setHeader("Content-Disposition", "attachment;filename=\"" + nombre + "\"");
-				String ruta = "c:\\torotask\\" + idDescarga;
+				response.setHeader(Messages.getString("CalendarioAction.101"), Messages.getString("CalendarioAction.102") + nombre + Messages.getString("CalendarioAction.103")); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+				String ruta = (String)request.getSession().getAttribute("rutaDescarga") + idDescarga;
 				FileInputStream in = new FileInputStream(new File(ruta));
 				ServletOutputStream out = response.getOutputStream();
 				byte[] outputByte = new byte[4096];
@@ -534,8 +572,8 @@ public class CalendarioAction extends DispatchAction {
 		} catch (Exception e) {
 			e.printStackTrace();
 			String mensage = e.getMessage();
-			request.setAttribute("error", mensage);
-			return mapping.findForward("error");
+			request.setAttribute(Messages.getString("CalendarioAction.105"), mensage); //$NON-NLS-1$
+			return mapping.findForward(Messages.getString("CalendarioAction.106")); //$NON-NLS-1$
 
 		}
 		return null;
@@ -546,14 +584,14 @@ public class CalendarioAction extends DispatchAction {
 			HttpServletResponse response) {
 		return null;
 	}
-	
-	private static boolean isNumeric(String cadena){
+
+	private static boolean isNumeric(String cadena) {
 		try {
 			Integer.parseInt(cadena);
 			return true;
-		} catch (NumberFormatException nfe){
+		} catch (NumberFormatException nfe) {
 			return false;
 		}
 	}
-	
+
 }

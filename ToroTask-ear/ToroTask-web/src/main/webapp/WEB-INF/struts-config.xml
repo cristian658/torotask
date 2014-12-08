@@ -5,9 +5,10 @@
 	<form-beans>
 		<form-bean name="calendarioForm" type="com.gotoque.torotask.presentacion.struts.form.CalendarioForm" />
 		<form-bean name="ganttForm" type="com.gotoque.torotask.presentacion.struts.form.GanttForm" />
-		<form-bean name="recursosForm" type="com.gotoque.torotask.presentacion.struts.form.RecurosForm" />
+		<form-bean name="recursosForm" type="com.gotoque.torotask.presentacion.struts.form.RecursosForm" />
 		<form-bean name="reportesForm" type="com.gotoque.torotask.presentacion.struts.form.ReportesForm" />
 		<form-bean name="accesoForm" type="com.gotoque.torotask.presentacion.struts.form.AccesoForm" />
+		<form-bean name="mantencionForm" type="com.gotoque.torotask.presentacion.struts.form.MantenedorForm" />
                 <form-bean name="loginForm" type="com.gotoque.torotask.presentacion.struts.form.LoginForm" />
 	</form-beans>
 
@@ -33,6 +34,7 @@
 			type="com.gotoque.torotask.presentacion.struts.action.RecursosAction"
 			validate="false">
 			<forward name="continuar" path="/recurso.jsp" />
+			<forward name="detalle" path="/jsp/recurso/recurso.jsp" />
 		</action>
 		<action attribute="reportesForm" name="reportesForm"
 			parameter="toMethod" path="/reportes" scope="request"
@@ -44,15 +46,22 @@
 			parameter="toMethod" path="/acceso" scope="request"
 			type="com.gotoque.torotask.presentacion.struts.action.AccesoAction"
 			validate="false">
-			<forward name="continuar" path="/index.jsp" />
+			<forward name="continuar" path="/calendario.do" />
+			<forward name="menu" path="/jsp/include/menu.jsp" />
+		</action>
+		<action attribute="mantencionForm" name="mantencionForm"
+			parameter="toMethod" path="/mantenedor" scope="request"
+			type="com.gotoque.torotask.presentacion.struts.action.MantenedorAction"
+			validate="false">
+			<forward name="continuar" path="/mantencion.jsp" />
 		</action>
                 <action attribute="loginForm" name="loginForm"
 			parameter="toMethod" path="/login" scope="request"
 			type="com.gotoque.torotask.presentacion.struts.action.LoginAction"
 			validate="false">
 			<forward name="continuar" path="/login.jsp" />
+                        <forward name="send" path="/calendario.do" />
 		</action>
-
 	</action-mappings>
 
 	<message-resources

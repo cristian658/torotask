@@ -31,6 +31,12 @@
     <description>This is the description of my J2EE component</description>
     <servlet-class>com.gotoque.torotask.presentacion.servlet.getTarea</servlet-class>
   </servlet>
+  <servlet>
+    <servlet-name>getImagen</servlet-name>
+    <display-name>This is the display name of my J2EE component</display-name>
+    <description>This is the description of my J2EE component</description>
+    <servlet-class>com.gotoque.torotask.presentacion.servlet.getImagen</servlet-class>
+  </servlet>
 
 
   <servlet-mapping>
@@ -44,6 +50,10 @@
   <servlet-mapping>
     <servlet-name>getTarea</servlet-name>
     <url-pattern>/servlet/getTarea.pdf</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>getImagen</servlet-name>
+    <url-pattern>/servlet/getImagen.jpg</url-pattern>
   </servlet-mapping>
 	<welcome-file-list>
 		<welcome-file>index.jsp</welcome-file>

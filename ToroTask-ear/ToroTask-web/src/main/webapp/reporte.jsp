@@ -1,13 +1,11 @@
-<%@ page import="com.gotoque.torotask.presentacion.struts.Utilidades.JSONObject" %>
-<%@ page import="com.gotoque.torotask.presentacion.struts.Utilidades.JSONArray" %>
-<%
-JSONArray proyectos = (JSONArray)request.getAttribute("proyectos");
-%>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<%
+String sizeAdjunto = (String)request.getSession().getAttribute("sizeAdjunto");
+%>
 <html>
 	<head>
 		<meta http-equiv="content-type" content="text/html; charset=UTF-8" />
-		<title>ASANA</title>
+		<title>TORO-TASK :: The evolution of software.</title>
 		<link href="styles/examples-offline.css" rel="stylesheet">
 		<link href="styles/kendo.common.min.css" rel="stylesheet">
 		<link href="styles/kendo.default.min.css" rel="stylesheet">
@@ -16,11 +14,10 @@ JSONArray proyectos = (JSONArray)request.getAttribute("proyectos");
 		<link href="styles/kendo.rtl.min.css" rel="stylesheet">
 		<link href="styles/style.css" rel="stylesheet">
 		<script src="js/jquery.min.js"></script>
-		<script src="js/angular.min.js"></script>
 		<script src="js/kendo.web.min.js"></script>
+        <script src="js/comun.js"></script>
 	</head>
 	<body>
-
 		<div id="example">
 			<div id="columna">
 				<div class="pane-content">
@@ -33,63 +30,7 @@ JSONArray proyectos = (JSONArray)request.getAttribute("proyectos");
 							TORO-TASK
 						</h2>
 					</div>
-					<ul id="panelbar">
-						<li>
-							<span class="k-link k-state-selected"><img
-									src="img/contacticon_client.png" width="20px">Personal</span>
-							<div style="padding: 10px;">
-								<div class="teamMate">
-									<img src="img/sin-imagen.jpg">
-									<h2>
-										Esteban Toro
-									</h2>
-									<div style=" color: white;">
-										Ingeniero Informatico
-									</div>
-								</div>
-								<div class="teamMate">
-									<img src="img/sin-imagen.jpg">
-									<h2>
-										Cristian Quezada
-									</h2>
-									<div style=" color: white;">
-										Ingeniero Informatico
-									</div>
-								</div>
-							</div>
-						</li>
-						<li class="k-state-active">
-							<img src="img/icon_project.png" width="20px">
-							Projectos
-							<ul>
-								<% 
-								for(int i = 0;i<proyectos.length();i++){
-									JSONObject proyecto = (JSONObject)proyectos.getJSONObject(i);
-
-								%>							
-								<li>
-									<%=proyecto.getString("idproyectos") + ".-" + proyecto.getString("proyecto")%>
-								</li>
-								<%}%>
-								<li class="k-state-active">
-									<img src="img/dashtasksicon.png" width="20px">
-									Tareas
-									<ul>
-										<li>
-											Tareas Activas
-										</li>
-										<li>
-											Tareas Cerradas
-										</li>
-									</ul>
-								</li>								
-							</ul>
-						</li>
-						<li disabled="disabled">
-							<img src="img/helpicon_on.png">
-							Ayuda.
-						</li>
-					</ul>
+					<div id="menu"></div>
 				</div>
 			</div>
 			<div id="cuerpo">
@@ -109,25 +50,25 @@ JSONArray proyectos = (JSONArray)request.getAttribute("proyectos");
 							<li id="tab4">
 								Recursos
 							</li>
+                            <li id="tab4">
+                                Mantenedor
+                            </li>
 						</ul>  
 						<div style="height:645px"></div>
 						<div style="height:645px">
 							<div style="padding: 10px;">
-								<input id="startReport"
-									value="<%=request.getAttribute("fechaInicio")%>">
-								<input id="endReport"
-									value="<%=request.getAttribute("fechaTermino")%>">
-								<button id="report">
-									Consultar
-								</button>
-								<button id="export">
-									Exportar
-								</button>
+								<input id="proyectoFilter"/>
+								<input id="estadoTarea"/>
+								<input id="startReport" value="<%=request.getAttribute("fechaInicio")%>">
+								<input id="endReport" value="<%=request.getAttribute("fechaTermino")%>">
+								<button id="report"> Consultar </button>
+								<button id="export"> Exportar </button>
 							</div>
 							<div id="grilla"></div>
 						</div>
 						<div style="height:645px"></div>
 						<div style="height:645px"></div>
+                        <div style="height:645px"></div>
 					</div>
 				</div>
 			</div>
@@ -140,33 +81,7 @@ JSONArray proyectos = (JSONArray)request.getAttribute("proyectos");
 				
                     $("#panelbar").kendoPanelBar({
                         expandMode: "single",
-                        select: onSelectPanelBar,
                     });
-				
-                    function onSelectPanelBar(e) {
-                        var id = $(e.item).find("> .k-link").text().trim();
-						switch (id){
-					<% 
-						for(int i = 0;i<proyectos.length();i++){
-							JSONObject proyecto = (JSONObject)proyectos.getJSONObject(i);
-					%>							
-						case "<%=proyecto.getString("idproyectos") + ".-" +proyecto.getString("proyecto")%>" :
-                        	var url="reportes.do?toMethod=getConsultarReporteTarea&tipo=p&id=<%=proyecto.getString("idproyectos")%>&inicio="+$("#startReport").val()+"&termino="+$("#endReport").val();
-							actualizagrilla(url);
-							break;
-					<%}%>
-						case "Tareas Activas" :						
-                            	url="reportes.do?toMethod=getConsultarReporteTarea&tipo=t&id=TA&inicio="+$("#startReport").val()+"&termino="+$("#endReport").val();
-								actualizagrilla(url);
-							break;
-						case "Tareas Cerradas" :						
-                        	var url="reportes.do?toMethod=getConsultarReporteTarea&tipo=t&id=TC&inicio="+$("#startReport").val()+"&termino="+$("#endReport").val();
-							actualizagrilla(url);
-							break;
-						default:
-							break; 
-						}
-                    }
 				
                     var tabStrip = $("#tabstrip").kendoTabStrip({
                         animation:  {
@@ -188,6 +103,8 @@ JSONArray proyectos = (JSONArray)request.getAttribute("proyectos");
                             document.location.href="gantt.do";
                         }else if(accion=="Recursos"){
                             document.location.href="recursos.do";
+                        }else if(accion=="Mantenedor"){
+                            document.location.href="mantenedor.do";
                         }
                     }
 					
@@ -197,7 +114,7 @@ JSONArray proyectos = (JSONArray)request.getAttribute("proyectos");
 					
 					var validator = $("#actividad").kendoValidator().data("kendoValidator");
 					
-					 var menu = $("#menu").kendoMenu({
+					 var menu = $("#menu2").kendoMenu({
 		                 select: onSelectMenu,
 		             });
 					
@@ -205,8 +122,10 @@ JSONArray proyectos = (JSONArray)request.getAttribute("proyectos");
 				        var accion = $(e.item).children(".k-link").text();
 						if(accion == "Imprimir"){
 							print("servlet/getTarea.pdf?online=true&id="+$("#idtarea").val());
+						}else if(accion == "Terminar"){
+							guardar("on");
 						}else if(accion == "Guardar"){
-							guardar();
+							guardar("off");
 						}else if(accion == "Exportar"){
 							document.location.href="servlet/getTarea.pdf?online=false&id="+$("#idtarea").val();
 						}else if(accion == "Salir"){
@@ -288,12 +207,8 @@ JSONArray proyectos = (JSONArray)request.getAttribute("proyectos");
 						format: formatoFecha,
 					}).data("kendoDateTimePicker");
 				
-					function guardar() {
+					function guardar(estado) {
 							if(validacion()){
-								var estado = "off";
-								if($("#estado").is(":checked")){
-									estado = "on";
-								}
 								var formData = "proyecto="+$("#proyecto").val()+
 								"&tarea="+$("#tarea").val()+
 								"&descripcion="+$("#descripcion").val()+
@@ -421,19 +336,28 @@ JSONArray proyectos = (JSONArray)request.getAttribute("proyectos");
 									saveUrl: "calendario.do?toMethod=setUpLoad",
 									autoUpload: true
 								},
+								select: onSelectUpload,
 								files : resp
 							}).data("kendoUpload");	
 						  },
 						  error: function( req, status, err ) {
-							filesUpload = $("#files").kendoUpload({
-								async: {
-									saveUrl: "calendario.do?toMethod=setUpLoad",
-									autoUpload: true
-								}
-							}).data("kendoUpload");
+								popupNotification.show("Error al cargar listado de adjuntos" + err, "info");
 						  }
 						});					
 					}
+					
+					function onSelectUpload(e) {
+				        $.each(e.files, function (index, value) {
+				          if(value.size><%=sizeAdjunto%>*1024*1024){
+							var size = value.size / 1024 / 1024;
+				          	var info = "El peso maximo para subir un archivo es de 5 MB.<br>"+
+				          			   "El archivo " + value.name + " pesa " + size.toFixed(2) + " Mb.";
+							popupNotification.show(info, "info");
+							e.preventDefault();
+							return false;
+				          }
+				        });
+				    };
 					
 					function cerrarVentana() {
 						tempVentanaTarea.close();
@@ -511,11 +435,7 @@ JSONArray proyectos = (JSONArray)request.getAttribute("proyectos");
 					})										
 					
 					function consultarReporte(e){
-						var url = "reportes.do?toMethod=getConsultarReporteTarea&id=&tipo=&inicio="+$("#startReport").val()+"&termino="+$("#endReport").val();
-						actualizagrilla(url);
-					}
-					function consultarReporte(e){
-						var url = "reportes.do?toMethod=getConsultarReporteTarea&id=&tipo=&inicio="+$("#startReport").val()+"&termino="+$("#endReport").val();
+						var url = "reportes.do?toMethod=getConsultarReporteTarea&id="+$("#proyectoFilter").val()+"&tipo="+$("#estadoTarea").val()+"&inicio="+$("#startReport").val()+"&termino="+$("#endReport").val();
 						actualizagrilla(url);
 					}
 					
@@ -573,14 +493,57 @@ JSONArray proyectos = (JSONArray)request.getAttribute("proyectos");
 						    },
 						    pageable: true,
 							columns: [
-		                         { field: "meetingID", title: "ID",width: "30px" },
-		                         { field: "proyecto", title: "Proyecto",width: "120px" },
-		                         { field: "title", title: "Tarea",width: "200px" },
-		                         { field: "start", title: "Fecha Inicio", format: "{0:dd/MM/yyyy hh:mm tt}", width: "110px" },
-		                         { field: "end", title: "Fecha Estimada", format: "{0:dd/MM/yyyy hh:mm tt}", width: "110px" },
-		                         { field: "cierre", title: "Fecha Real", format: "{0:dd/MM/yyyy hh:mm tt}", width: "110px" },
+		                         { field: "meetingID", title: "ID",width: "30px",},
+		                         { field: "proyecto", title: "Proyecto",width: "120px"},
+		                         { field: "title", title: "Tarea",width: "200px"},
+		                         { field: "start", title: "Fecha Inicio", format: "{0:dd/MM/yyyy hh:mm tt}", width: "110px"},
+		                         { field: "end", title: "Fecha Estimada", format: "{0:dd/MM/yyyy hh:mm tt}", width: "110px"},
+		                         { field: "cierre", title: "Fecha Real", format: "{0:dd/MM/yyyy hh:mm tt}", width: "110px"},
 		                     ]
 					}).data("kendoGrid");	
+					
+					var comboProyectoFilter = $("#proyectoFilter").kendoComboBox({
+						dataTextField:"proyecto",
+						dataValueField:"idproyectos",
+						placeholder:"Seleccione proyecto ...",
+						dataSource:{
+							transport:{
+								read:{
+								url :"calendario.do?toMethod=getConsultaProyectos",
+								dataType:"json",
+								data:{
+									q: function(){
+											return $("#proyectoFilter").data("kendoComboBox").value();
+										}
+									}
+								}
+							}
+						}
+					}).data("kendoComboBox");
+					
+					$("#estadoTarea").kendoComboBox({
+						placeholder:"Estado Tarea ...",
+                        dataTextField: "text",
+                        dataValueField: "value",
+                        dataSource: [
+                            { text: "Todas", value: "" },
+                            { text: "Activo", value: "0" },
+                            { text: "Cerrado", value: "1" },
+                        ],
+                    });
+                    
+                    $.ajax({
+					  url: 'acceso.do?toMethod=getMenu',
+					  data: "",
+					  dataType: 'html',
+					  success: function( resp ) {
+					  	$("#menu").html(resp);
+					  },
+					  error: function( req, status, err ) {
+						popupNotification.show("Error al cargar menu : " + err, "error");
+					  }
+					});	
+		
                 });		
             </script>
 		</div>

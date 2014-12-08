@@ -1,23 +1,27 @@
-<%@ page import="com.gotoque.torotask.presentacion.struts.Utilidades.JSONObject" %>
-<%@ page import="com.gotoque.torotask.presentacion.struts.Utilidades.JSONArray" %>
+<jsp:directive.page import="com.gotoque.torotask.presentacion.struts.Utilidades.JSONObject"/><!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <%
-JSONArray proyectos = (JSONArray)request.getAttribute("proyectos");
+String sizeAdjunto = (String)request.getSession().getAttribute("sizeAdjunto");
+String fechaHoy = (String)request.getAttribute("fechaHoy");
+String inicioLaboral = (String)request.getAttribute("inicioLaboral");
+String terminoLaboral = (String)request.getAttribute("terminoLaboral");
+JSONObject usuario = (JSONObject)request.getSession().getAttribute("usuario");
+JSONObject perfil = usuario.getJSONObject("perfilVO");
 %>
-<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
     <head>
-        <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
-        <title>ASANA</title>
+        <meta http-equiv="content-type" content="text/html; charset=UTF-8"></meta>
+        <title>TORO-TASK :: The evolution of software.</title>
         <link href="styles/examples-offline.css" rel="stylesheet">
-        <link href="styles/kendo.common.min.css" rel="stylesheet">
-        <link href="styles/kendo.default.min.css" rel="stylesheet">
+        <link href="styles/kendo.common-bootstrap.min.css" rel="stylesheet">
+        <link href="styles/kendo.common.min.css" rel="stylesheet"/>
+        <link href="styles/kendo.default.min.css" rel="stylesheet"/>
         <link href="styles/kendo.dataviz.default.min.css" rel="stylesheet" />
         <link href="styles/kendo.dataviz.min.css" rel="stylesheet" />
         <link href="styles/kendo.rtl.min.css" rel="stylesheet">
         <link href="styles/style.css" rel="stylesheet">
         <script src="js/jquery.min.js"></script>
-        <script src="js/angular.min.js"></script>
         <script src="js/kendo.web.min.js"></script>
+        <script src="js/comun.js"></script>
     </head>
     <body>
         <div id="example">
@@ -32,63 +36,7 @@ JSONArray proyectos = (JSONArray)request.getAttribute("proyectos");
 							TORO-TASK
 						</h2>
 					</div>
-					<ul id="panelbar">
-						<li class="k-state-active">
-							<span class="k-link k-state-selected"><img
-									src="img/contacticon_client.png" width="20px">Personal</span>
-							<div style="padding: 10px;">
-								<div class="teamMate">
-									<img src="img/sin-imagen.jpg">
-									<h2>
-										Esteban Toro
-									</h2>
-									<div style=" color: white;">
-										Ingeniero Informatico
-									</div>
-								</div>
-								<div class="teamMate">
-									<img src="img/sin-imagen.jpg">
-									<h2>
-										Cristian Quezada
-									</h2>
-									<div style=" color: white;">
-										Ingeniero Informatico
-									</div>
-								</div>
-							</div>
-						</li>
-						<li>
-							<img src="img/icon_project.png" width="20px">
-							Projectos
-							<ul>
-								<% 
-								for(int i = 0;i<proyectos.length();i++){
-									JSONObject proyecto = (JSONObject)proyectos.getJSONObject(i);
-
-								%>							
-								<li>
-									<%=proyecto.getString("idproyectos") + ".-" + proyecto.getString("proyecto")%>
-								</li>
-								<%}%>
-								<li>
-									<img src="img/dashtasksicon.png" width="20px">
-									Tareas
-									<ul>
-										<li>
-											Tareas Activas
-										</li>
-										<li>
-											Tareas Cerradas
-										</li>
-									</ul>
-								</li>								
-							</ul>
-						</li>
-						<li disabled="disabled">
-							<img src="img/helpicon_on.png">
-							Ayuda.
-						</li>
-					</ul>
+					<div id="menu"></div>
 				</div>
             </div>
             <div id="cuerpo">
@@ -108,10 +56,14 @@ JSONArray proyectos = (JSONArray)request.getAttribute("proyectos");
                             <li id="tab4">
                                 Recursos
                             </li>
+                            <li id="tab4">
+                                Mantenedor
+                            </li>
                         </ul>
                         <div style="height:645px">
                             <div id="scheduler"></div>
                         </div>
+                        <div style="height:645px"></div>
                         <div style="height:645px"></div>
                         <div style="height:645px"></div>
                         <div style="height:645px"></div>
@@ -126,31 +78,7 @@ JSONArray proyectos = (JSONArray)request.getAttribute("proyectos");
 		$(function(){		
                     $("#panelbar").kendoPanelBar({
                         expandMode: "single",
-                        select: onSelectPanelBar,
                     });
-				
-                    function onSelectPanelBar(e) {
-                        var id = $(e.item).find("> .k-link").text().trim();
-						switch (id){
-						<% 
-							for(int i = 0;i<proyectos.length();i++){
-								JSONObject proyecto = (JSONObject)proyectos.getJSONObject(i);
-						%>							
-							case "<%=proyecto.getString("idproyectos") + ".-" +proyecto.getString("proyecto")%>" :
-                            	document.location.href="reportes.do?tipo=p&id=<%=proyecto.getString("idproyectos")%>";
-                            	
-								break;
-						<%}%>						
-							case "Tareas Activas" :						
-	                            	document.location.href="reportes.do?tipo=t&id=TA";
-								break;
-							case "Tareas Cerradas" :						
-	                            	document.location.href="reportes.do?tipo=t&id=TC";
-								break;
-							default:
-								break; 
-						}
-                    }
 				
                     var tabStrip = $("#tabstrip").kendoTabStrip({
                         animation:  {
@@ -172,6 +100,8 @@ JSONArray proyectos = (JSONArray)request.getAttribute("proyectos");
                             document.location.href="gantt.do";
                         }else if(accion=="Recursos"){
                             document.location.href="recursos.do";
+                        }else if(accion=="Mantenedor"){
+                            document.location.href="mantenedor.do";
                         }
                     }
 					
@@ -181,7 +111,7 @@ JSONArray proyectos = (JSONArray)request.getAttribute("proyectos");
 					
 					var validator = $("#actividad").kendoValidator().data("kendoValidator");
 					
-					 var menu = $("#menu").kendoMenu({
+					 var menu = $("#menu2").kendoMenu({
 		                 select: onSelectMenu,
 		             });
 					
@@ -189,8 +119,10 @@ JSONArray proyectos = (JSONArray)request.getAttribute("proyectos");
 				        var accion = $(e.item).children(".k-link").text();
 						if(accion == "Imprimir"){
 							print("servlet/getTarea.pdf?online=true&id="+$("#idtarea").val());
+						}else if(accion == "Terminar"){
+							guardar("on");
 						}else if(accion == "Guardar"){
-							guardar();
+							guardar("off");
 						}else if(accion == "Exportar"){
 							document.location.href="servlet/getTarea.pdf?online=false&id="+$("#idtarea").val();
 						}else if(accion == "Salir"){
@@ -220,7 +152,7 @@ JSONArray proyectos = (JSONArray)request.getAttribute("proyectos");
 						}
 					});
 					
-					$("#integrantes").kendoMultiSelect({	
+					var equipo = $("#integrantes").kendoMultiSelect({	
 						placeholder:"Seleccione integrantes ...",
 						dataTextField:"correo",
 						dataValueField:"idUsuario",
@@ -239,7 +171,7 @@ JSONArray proyectos = (JSONArray)request.getAttribute("proyectos");
 							}
 						}
 					});
-							
+
 					var comboProyecto = $("#proyecto").kendoComboBox({
 						dataTextField:"proyecto",
 						dataValueField:"idproyectos",
@@ -274,12 +206,8 @@ JSONArray proyectos = (JSONArray)request.getAttribute("proyectos");
 						parseFormat:"yyyy/MM/dd HH:mm:ss",
 					}).data("kendoDateTimePicker");
 				
-					function guardar() {
+					function guardar(estado) {
 							if(validacion()){
-								var estado = "off";
-								if($("#estado").is(":checked")){
-									estado = "on";
-								}
 								var formData = "idproyecto="+$("#proyecto").val()+
 								"&tarea="+$("#tarea").val()+
 								"&descripcion="+$("#descripcion").val()+
@@ -333,7 +261,7 @@ JSONArray proyectos = (JSONArray)request.getAttribute("proyectos");
 							$("#val_integrantes").css("visibility", "hidden");
 						}
 						
-						if(fechaInicio.length==0 || fechaTermino == 0){
+						if(fechaInicio.val()=="" || fechaTermino.val()==""){
 							$("#val_fechas").css("visibility", "visible");
 						}else{
 							$("#val_fechas").css("visibility", "hidden");
@@ -357,19 +285,28 @@ JSONArray proyectos = (JSONArray)request.getAttribute("proyectos");
 						calendario.dataSource.read();
 						calendario.refresh();
 					}					
-				
-					function scheduler_edit(e) {			
-						limpiarFormulario();
-						$("#idtarea").val(e.event.meetingID);
-						$("#tarea").val(e.event.title);
-						comboProyecto.value(e.event.idproyecto);
-						$("#descripcion").val(e.event.description);
-						start.value(new Date(kendo.toString(e.event.start, formatoFecha)));
-						end.value(new Date(kendo.toString(e.event.end, formatoFecha)));
-						llenarComentario(e.event.meetingID);
-						llenarArchivos(e.event.meetingID);
-						llenarIntegrantes(e.event.meetingID);
-						tempVentanaTarea.open();
+					
+					function scheduler_edit(e) {
+						<%if(perfil.getString("idPerfil").equals("1")){%>
+						if(e.event.meetingID==0){
+							popupNotification.show("Su perfil no puede crear tareas", "info");
+							actualizaScheduler();
+						}else{
+						<%}%>
+							limpiarFormulario();
+							$("#idtarea").val(e.event.meetingID);
+							$("#tarea").val(e.event.title);
+							comboProyecto.value(e.event.idproyecto);
+							$("#descripcion").val(e.event.description);
+							start.value(new Date(kendo.toString(e.event.start, formatoFecha)));
+							end.value(new Date(kendo.toString(e.event.end, formatoFecha)));
+							llenarComentario(e.event.meetingID);
+							llenarArchivos(e.event.meetingID);
+							llenarIntegrantes(e.event.meetingID);
+							tempVentanaTarea.open();
+						<%if(perfil.getString("idPerfil").equals("1")){%>
+						}
+						<%}%>
 					}
 					
 					function llenarIntegrantes(idtarea){
@@ -428,19 +365,28 @@ JSONArray proyectos = (JSONArray)request.getAttribute("proyectos");
 									saveUrl: "calendario.do?toMethod=setUpLoad",
 									autoUpload: true
 								},
+								select: onSelectUpload,
 								files : resp
 							}).data("kendoUpload");	
 						  },
 						  error: function( req, status, err ) {
-							filesUpload = $("#files").kendoUpload({
-								async: {
-									saveUrl: "calendario.do?toMethod=setUpLoad",
-									autoUpload: true
-								}
-							}).data("kendoUpload");
+								popupNotification.show("Error al cargar listado de adjuntos" + err, "info");
 						  }
 						});					
 					}
+					
+					function onSelectUpload(e) {
+				        $.each(e.files, function (index, value) {
+				          if(value.size><%=sizeAdjunto%>*1024*1024){
+							var size = value.size / 1024 / 1024;
+				          	var info = "El peso maximo para subir un archivo es de 5 MB.<br>"+
+				          			   "El archivo " + value.name + " pesa " + size.toFixed(2) + " Mb.";
+							popupNotification.show(info, "info");
+							e.preventDefault();
+							return false;
+				          }
+				        });
+				    };
 					
 					function cerrarVentana() {						
 						actualizaScheduler();
@@ -481,11 +427,22 @@ JSONArray proyectos = (JSONArray)request.getAttribute("proyectos");
 							}
 						});
 					
-					
+					$.ajax({
+					  url: 'acceso.do?toMethod=getMenu',
+					  data: "",
+					  dataType: 'html',
+					  success: function( resp ) {
+					  	$("#menu").html(resp);
+					  },
+					  error: function( req, status, err ) {
+						popupNotification.show("Error al cargar menu : " + err, "error");
+					  }
+					});	
+									
 					$("#scheduler").kendoScheduler({
-						date: new Date(),
-						startTime: new Date("2014-10-11 08:00:00"),
-						endTime: new Date("2014-10-11 23:00:00"),
+						date: new Date('<%=fechaHoy%>'),
+						startTime: new Date('<%=inicioLaboral%>'),
+						endTime: new Date('<%=terminoLaboral%>'),
 						height: 640,
 						selectable: true,
 						timezone:"Etc/UTC",
@@ -495,10 +452,15 @@ JSONArray proyectos = (JSONArray)request.getAttribute("proyectos");
 							"agenda"
 						],
 						dataSource : dataSourceCalendario,
-						editable: true,
+						editable: {
+						    destroy: false
+					    },
 						edit : scheduler_edit
 					});	
-                    actualizaScheduler();
+                    
+					actualizaScheduler();
+                    
+                    
                 });		
             </script>
         </div>
